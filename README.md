@@ -1,10 +1,11 @@
-🎬 # AI Movie Recommendation System with Explainable AI
+# 🎬 AI Movie Recommendation System with Explainable AI
 
 An interactive Hybrid Movie Recommendation System built using collaborative filtering, content-based filtering, global popularity ranking, and Explainable AI (SHAP).
 The system supports both new users and existing users, includes a feedback loop, and provides model evaluation metrics.
 
-🚀 Features
-🔹 Hybrid Recommendation Engine
+## 🚀 Features
+
+### 🔹 Hybrid Recommendation Engine
 
 Global popularity-based recommendations (IMDB weighted rating)
 
@@ -16,7 +17,7 @@ Personalized recommendations for existing users
 
 Cold-start handling for new users
 
-🔹 Explainable AI (XAI)
+### 🔹 Explainable AI (XAI)
 
 SHAP-based feature explanations
 
@@ -24,13 +25,13 @@ Textual explanations for recommendation reasoning
 
 Visual waterfall plots showing feature contribution
 
-🔹 Feedback Mechanism
+### 🔹 Feedback Mechanism
 
 Users can like 👍 or dislike 👎 recommendations
 
 Feedback dynamically influences future suggestions
 
-🔹 Evaluation Metrics
+### 🔹 Evaluation Metrics
 
 Precision@K
 
@@ -40,7 +41,7 @@ Train-test split evaluation per user
 
 Proper separation of recommendation and evaluation logic
 
-🔹 Interactive UI
+### 🔹 Interactive UI
 
 Built using Streamlit
 
@@ -54,7 +55,7 @@ Supports:
 
     Evaluation on demand
 
-    🧠 Model Overview
+## 🧠 Model Overview
 1️⃣ Popularity Model
 
 Uses IMDB Weighted Rating:
@@ -83,7 +84,7 @@ Linear Regression trained on rating features
 
 SHAP waterfall plots show feature contribution
 
-📂 Project Structure
+## 📂 Project Structure
 
 ``` code
 .
@@ -94,7 +95,7 @@ SHAP waterfall plots show feature contribution
 │   ├── ratings.dat
 ├── README.md
 ```
-📊 Dataset
+## 📊 Dataset
 
 This project uses the MovieLens 1M Dataset:
 
@@ -108,20 +109,20 @@ Dataset link: https://grouplens.org/datasets/movielens/
 
 Installation
 
-1️⃣ Clone the repository
+### 1️⃣ Clone the repository
 ```bash
 git clone https://github.com/yourusername/movie-recommender.git
 cd movie-recommender
 ```
-2️⃣ Install dependencies
+### 2️⃣ Install dependencies
 ```python
 pip install -r requirements.txt
 ```
-3️⃣ Run the application
+### 3️⃣ Run the application
 ```python
 streamlit run app.py
 ```
-📈 Evaluation
+## 📈 Evaluation
 
 -User-level train-test split
 
@@ -131,8 +132,8 @@ streamlit run app.py
 
 -No data leakage during evaluation
 
-🖥️ How It Works
-New User
+## 🖥️ How It Works
+#### New User
 
     -Can select preferred genres
 
@@ -140,7 +141,7 @@ New User
 
     -SHAP explains why the top movie is recommended
 
-Existing User
+#### Existing User
 
     Receives:
 
@@ -156,7 +157,7 @@ Existing User
 
     -SHAP visualizes feature impact
 
-Author
+## Author
 
 Ch. Mounika
 
