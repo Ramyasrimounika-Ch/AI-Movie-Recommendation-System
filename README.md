@@ -1,4 +1,4 @@
-🎬 ### AI Movie Recommendation System with Explainable AI
+🎬 # AI Movie Recommendation System with Explainable AI
 
 An interactive Hybrid Movie Recommendation System built using collaborative filtering, content-based filtering, global popularity ranking, and Explainable AI (SHAP).
 The system supports both new users and existing users, includes a feedback loop, and provides model evaluation metrics.
