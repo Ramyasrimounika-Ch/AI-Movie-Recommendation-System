@@ -93,22 +93,43 @@ def personalized_top_n(user_id, top_n=10, remove_watched=True):
     )
 
 def user_genre_top_n(user_id, genre, top_n=10):
-    user_movies = ratings[ratings["userId"] == user_id]["movieId"]
 
-    genre_movies = movies[
-        movies["genres"].str.contains(genre, case=False, na=False)
-    ]
-    genre_movies = genre_movies[
-        ~genre_movies["movieId"].isin(user_movies)
-    ]
-    genre_movies = genre_movies.merge(
-        weighted_ratings,
-        on="movieId",
-        how="left"
+    similar_users = (
+        user_similarity_df[user_id]
+        .sort_values(ascending=False)
+        .iloc[1:6]
     )
-    return genre_movies.sort_values(
-        "weighted_rating", ascending=False
-    ).head(top_n)
+
+    scores = np.zeros(user_movie_filled.shape[1])
+
+    for sim_user, sim in similar_users.items():
+        scores += sim * user_movie_filled.loc[sim_user].values
+
+    scores = pd.Series(
+        scores,
+        index=user_movie_filled.columns
+    )
+
+    watched = user_movie_matrix.loc[user_id].dropna().index
+    scores = scores.drop(watched, errors="ignore")
+
+    recs = (
+        scores.sort_values(ascending=False)
+        .reset_index()
+        .rename(columns={"index":"movieId",0:"score"})
+    )
+
+    recs = recs.merge(movies,on="movieId")
+
+    recs = recs[
+        recs["genres"].str.contains(
+            genre,
+            case=False,
+            na=False
+        )
+    ]
+
+    return recs.head(top_n)
 
 #SHAP Explainability
 X = movie_stats[["v", "R"]]
