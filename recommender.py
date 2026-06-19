@@ -131,18 +131,123 @@ def user_genre_top_n(user_id, genre, top_n=10):
 
     return recs.head(top_n)
 
-#SHAP Explainability
-X = movie_stats[["v", "R"]]
-y = movie_stats["weighted_rating"]
+def build_explainability_dataset():
+    
+    rows = []
+
+    for user_id in user_movie_filled.index[:500]:
+
+        similar_users = (
+            user_similarity_df[user_id]
+            .sort_values(ascending=False)
+            .iloc[1:6]
+        )
+
+        for movie_id in user_movie_filled.columns:
+
+            ratings_list = []
+            weighted_sum = 0
+
+            for sim_user, sim in similar_users.items():
+
+                rating = user_movie_filled.loc[sim_user, movie_id]
+
+                if rating > 0:
+                    ratings_list.append(rating)
+                    weighted_sum += sim * rating
+
+            if len(ratings_list) == 0:
+                continue
+
+            movie_row = movie_stats[
+                movie_stats["movieId"] == movie_id
+            ]
+
+            if movie_row.empty:
+                continue
+
+            rows.append({
+                "avg_neighbor_rating":
+                    np.mean(ratings_list),
+
+                "weighted_neighbor_rating":
+                    weighted_sum,
+
+                "movie_votes":
+                    movie_row["v"].values[0],
+
+                "movie_avg_rating":
+                    movie_row["R"].values[0],
+
+                "recommendation_score":
+                    weighted_sum
+            })
+
+    return pd.DataFrame(rows)
+    
+explain_df = build_explainability_dataset()
+
+X = explain_df[
+    [
+        "avg_neighbor_rating",
+        "weighted_neighbor_rating",
+        "movie_votes",
+        "movie_avg_rating"
+    ]
+]
+
+y = explain_df["recommendation_score"]
 
 explain_model = LinearRegression()
 explain_model.fit(X, y)
 
-shap_explainer = shap.Explainer(explain_model, X)
+shap_explainer = shap.Explainer(
+    explain_model,
+    X
+)
 
-def explain_movie(movie_id):
-    row = movie_stats[movie_stats["movieId"] == movie_id][["v", "R"]]
-    return shap_explainer(row)
+def explain_recommendation_shap(user_id, movie_id):
+
+    similar_users = (
+        user_similarity_df[user_id]
+        .sort_values(ascending=False)
+        .iloc[1:6]
+    )
+
+    ratings_list = []
+    weighted_sum = 0
+
+    for sim_user, sim in similar_users.items():
+
+        rating = user_movie_filled.loc[
+            sim_user,
+            movie_id
+        ]
+
+        if rating > 0:
+            ratings_list.append(rating)
+            weighted_sum += sim * rating
+
+    movie_row = movie_stats[
+        movie_stats["movieId"] == movie_id
+    ]
+
+    sample = pd.DataFrame([{
+        "avg_neighbor_rating":
+            np.mean(ratings_list)
+            if ratings_list else 0,
+
+        "weighted_neighbor_rating":
+            weighted_sum,
+
+        "movie_votes":
+            movie_row["v"].values[0],
+
+        "movie_avg_rating":
+            movie_row["R"].values[0]
+    }])
+
+    return shap_explainer(sample)
 
 def get_user_genre_profile(user_id, top_k=3):
     """
