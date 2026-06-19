@@ -53,7 +53,8 @@ else:
         st.dataframe(personal_movies[["title", "genres"]])
 
         top_movie = personal_movies.iloc[0]
-
+        recommended_movie_id = top_movie["movieId"]
+               
         st.subheader("Why this movie?")
         st.info(rec.generate_textual_explanation(user_id, top_movie))
 
