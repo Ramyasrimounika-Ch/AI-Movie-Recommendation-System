@@ -34,7 +34,6 @@ if user_type == "New User":
 
     st.dataframe(recs[["title", "genres", "weighted_rating"]])
 
-    # SHAP explanation (top movie)
     movie = recs.iloc[0]
     st.subheader("Why this movie is recommended?")
     st.info(rec.generate_textual_explanation(None, movie))
