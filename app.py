@@ -38,12 +38,7 @@ if user_type == "New User":
     movie = recs.iloc[0]
     st.subheader("Why this movie is recommended?")
     st.info(rec.generate_textual_explanation(None, movie))
-    shap_values = rec.explain_movie(movie.movieId)
-
-    fig, ax = plt.subplots()
-    shap.plots.waterfall(shap_values[0], show=False)
-    st.pyplot(fig)
-
+    
 else:
     selected_genre = st.sidebar.selectbox("Genre Types", genres)
     user_id = st.sidebar.number_input("User ID", 1, 6040, 1)
@@ -96,6 +91,7 @@ else:
         st.dataframe(user_genre_movies[["title", "genres", "weighted_rating"]])
 
         top_movie = user_genre_movies.iloc[0]
+        recommended_movie_id = top_movie["movieId"]
 
         st.subheader("Why this movie?")
         st.info(rec.generate_textual_explanation(user_id, top_movie))
@@ -134,7 +130,7 @@ else:
 
     st.subheader("Explaining Recommendation")
 
-    shap_values = rec.explain_recommendation_shap(user_id,movie_id)
+    shap_values = rec.explain_recommendation_shap(user_id,recommended_movie_id)
     fig, ax = plt.subplots()
     shap.plots.waterfall(shap_values[0], show=False)
     st.pyplot(fig)
