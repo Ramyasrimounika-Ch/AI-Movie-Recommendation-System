@@ -134,7 +134,7 @@ else:
 
     st.subheader("Explaining Recommendation")
 
-    shap_values = rec.explain_movie(movie_id)
+    shap_values = rec.explain_recommendation_shap(user_id,movie_id)
     fig, ax = plt.subplots()
     shap.plots.waterfall(shap_values[0], show=False)
     st.pyplot(fig)
